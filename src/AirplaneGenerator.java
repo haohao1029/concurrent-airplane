@@ -1,11 +1,14 @@
 
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class AirplaneGenerator implements Runnable{
 	ControlTower ct;
-	public AirplaneGenerator(ControlTower ct) {
+	LinkedBlockingDeque<Airplane> listAirplane;
+	public AirplaneGenerator(ControlTower ct, LinkedBlockingDeque<Airplane> listAirplane) {
 		this.ct = ct;
+		this.listAirplane = listAirplane;
 	};
 	
 	@Override
@@ -14,21 +17,22 @@ public class AirplaneGenerator implements Runnable{
 		
 		while (airplaneID != 11) {
 			int pfuelShortage = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-			int people = ThreadLocalRandom.current().nextInt(150, 200 + 1);
-			int supplies = ThreadLocalRandom.current().nextInt(10, 30 + 1);
-			int fuelLeft = ThreadLocalRandom.current().nextInt(5, 20 + 1);
-			boolean fuel = true;
+			boolean shortage = false;
 			if (pfuelShortage == 10) {
-				fuel = false;
+				shortage = true;
 			}
 			
-			Airplane airplane = new Airplane(airplaneID, fuel, people, fuelLeft, supplies, ct);
+			Airplane airplane = new Airplane(
+					airplaneID, 
+					false, 
+					false, 
+					shortage, 
+					false, 
+					ct);
 			Thread thap = new Thread(airplane);
 			thap.start();
-			
-			
+
 			airplaneID++;
-			
 			
 			try {
 				int duration = ThreadLocalRandom.current().nextInt(0, 3 + 1);

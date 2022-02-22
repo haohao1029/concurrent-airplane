@@ -1,30 +1,60 @@
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 public class Gateway implements Runnable{
-	static Semaphore s = new Semaphore(1);
+
+	private Semaphore assigned = new Semaphore(1);
 	ControlTower ct;
-	public Gateway(ControlTower ct) {
+	int id;
+	LinkedBlockingDeque<Airplane> listAirplane;
+	public Gateway(ControlTower ct, int id, LinkedBlockingDeque<Airplane> listAirplane) {
 		this.ct = ct;
+		this.id = id;
+		this.listAirplane = listAirplane;
+
 	};
+	
 	@Override
 	public void run() {
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException iex)
+        {
+            iex.printStackTrace();
+        }
+		while (true) {
+			try {
+				Airplane ap = ct.askPlaneToLane(this);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}		
+	
+	synchronized void docktoGateway(Airplane ap) {
 		try {
-			Airplane ap = ct.askPlaneToLane();
-			System.out.println(ap.getId());
+			TimeUnit.MILLISECONDS.sleep(500);
+			assigned.acquire();
+			System.out.println("Airplane "+ ap.id + " docked to gateway " + id + ".");
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	synchronized void docktoGateway() {
-		
+
+	synchronized void undocktoGateway(Airplane ap) {
+		try {
+			TimeUnit.MILLISECONDS.sleep(500);
+			assigned.release();
+			System.out.println("Airplane "+ ap.id + " undocked from gateway " + id + ".");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
+
+	
 	synchronized void planeLeave() {
 		
 	}
-	public void lock() throws InterruptedException {
-		s.acquire();
-	};
-	public void release() throws InterruptedException {
-		s.release();
-	};
 }

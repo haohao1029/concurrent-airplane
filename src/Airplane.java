@@ -1,40 +1,42 @@
 import java.awt.*;
 
 class Airplane implements Runnable{
-	int id; boolean fuel; int people; int supplies; ControlTower ct; int fuelLeft;
+	int id; boolean fuel; boolean people; boolean supplies; ControlTower ct; boolean shortage;
 	
-	public Airplane(int id, boolean fuel, int people, int fuelLeft, int supplies, ControlTower ct) {
+	public Airplane(int id, boolean fuel, boolean people, boolean shortage, boolean supplies, ControlTower ct) {
 		this.id = id;
 		this.fuel = fuel;
 		this.people = people;
 		this.supplies = supplies;
 		this.ct = ct;
-		this.fuelLeft = fuelLeft;
+		this.shortage = shortage;
 	}
 	
 	public int getId() {
 		return id;
 	}
-	public boolean getFuel() {
-		return fuel;
+	public boolean getShortage() {
+		return shortage;
 	}
-	public int getPeople() {
+	public boolean getPeople() {
 		return people;
 	}
-	public int getSupply() {
+	public boolean getSupply() {
 		return supplies;
 	}
-	public int getFuelLeft() {
-		return fuelLeft;
+	public boolean getFuel() {
+		return fuel;
 	}
 	
 	@Override
 	public void run() {
 		goForQueue();
 	}	
-	
+	public void customerDisembarking() {
+		
+	}
 	public void refillFuel() {
-		this.fuelLeft = 100;
+
 	}
 	private synchronized void goForQueue()
     {
