@@ -1,7 +1,12 @@
 import java.awt.*;
 
 class Airplane implements Runnable{
-	int id; boolean fuel; boolean people; boolean supplies; ControlTower ct; boolean shortage;
+	private int id;
+	private  boolean fuel;
+	private boolean people;
+	private boolean supplies;
+	private ControlTower ct;
+	private boolean shortage;
 	
 	public Airplane(int id, boolean fuel, boolean people, boolean shortage, boolean supplies, ControlTower ct) {
 		this.id = id;
@@ -27,16 +32,32 @@ class Airplane implements Runnable{
 	public boolean getFuel() {
 		return fuel;
 	}
-	
+	public int setId(int id) {
+		this.id = id;
+        return id;
+	}
+	public boolean setShortage(boolean shortage) {
+		this.shortage = shortage;
+        return shortage;
+	}
+	public boolean setPeople(boolean people) {
+		this.people = people;
+        return people;
+	}
+	public boolean setSupply(boolean supplies) {
+		this.supplies = supplies;
+        return supplies;
+	}
+	public boolean setFuel(boolean fuel) {
+		this.fuel = fuel;
+        return fuel;
+	}
 	@Override
 	public void run() {
 		goForQueue();
 	}	
 	public void customerDisembarking() {
 		
-	}
-	public void refillFuel() {
-
 	}
 	private synchronized void goForQueue()
     {

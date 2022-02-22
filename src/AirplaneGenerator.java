@@ -25,7 +25,7 @@ public class AirplaneGenerator implements Runnable{
 			Airplane airplane = new Airplane(
 					airplaneID, 
 					false, 
-					false, 
+					true, 
 					shortage, 
 					false, 
 					ct);

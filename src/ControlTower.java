@@ -1,11 +1,12 @@
 import java.util.concurrent.LinkedBlockingDeque;
 
 class ControlTower {
-	Runway rw = new Runway();
+	Runway rw;
 	LinkedBlockingDeque<Airplane> listAirplane;
 
-	public ControlTower(LinkedBlockingDeque<Airplane> listAirplane) {
+	public ControlTower(LinkedBlockingDeque<Airplane> listAirplane, Runway rw) {
 		this.listAirplane = listAirplane;
+		this.rw = rw;
 	}
 	 
 	public Airplane askPlaneToLane(Gateway gt) throws InterruptedException {
@@ -14,24 +15,14 @@ class ControlTower {
 			while(listAirplane.size() == 0 ) {
 				listAirplane.wait();
 			}
-			System.out.println(listAirplane);
 			ap = listAirplane.take();
-			System.out.println("Airplane " + ap.id + " is assigned to gateway "+ gt.id+" prepare to costing to runway.");
-			if (rw.getAvaiability()) 
-				rw.coasting(ap);
-			
-			gt.docktoGateway(ap);			
-			gt.undocktoGateway(ap);	
-			
-			if (rw.getAvaiability()) 
-				rw.leaving(ap);			
-			
+			System.out.println("\tAirplane " + ap.getId() + " is assigned to gateway "+ gt.id+".");			
 		}
 		return ap;
 	}
 	
 	public void add(Airplane ap) {
-		if (ap.shortage == true) {
+		if (ap.getShortage() == true) {
 			System.out.println("Shortage Airplane "+ String.valueOf(ap.getId())+ " with " + ap + " is entering the queue ");
 			listAirplane.offerFirst(ap);
 		} else {

@@ -7,33 +7,29 @@ public class Runway {
 	};
 
 	synchronized void coasting(Airplane ap) throws InterruptedException {
-		if (runwayAssigned.availablePermits() == 1) {
-			runwayAssigned.acquire();
-		}
-		TimeUnit.MILLISECONDS.sleep(1000);
-		
 		if (runwayAssigned.availablePermits() == 0) {
-			runwayAssigned.release();
+			System.out.println("\tAirplane " + ap.getId() + "Waiting for runway avaiable");
 		}
+		while (runwayAssigned.availablePermits() == 0) wait();
+		System.out.println("\tAirplane " + ap.getId() + " prepare to costing to runway.");
+		runwayAssigned.acquire();
+		TimeUnit.MILLISECONDS.sleep(1000);	
+		System.out.println("\tAirplane " + ap.getId() + " reached gateway.");
+		runwayAssigned.release();
+		notify();
 	}
+	
 	synchronized void leaving(Airplane ap) throws InterruptedException {
-		System.out.println("Airplane " + ap.id + " is coasting to runway prepare to leaving.");
-
-		if (runwayAssigned.availablePermits() == 1) {
-			runwayAssigned.acquire();
-		}
-		TimeUnit.MILLISECONDS.sleep(1000);
-		
 		if (runwayAssigned.availablePermits() == 0) {
-			runwayAssigned.release();
-			this.notify();
+			System.out.println("\tAirplane " + ap.getId() + " Waiting for runway avaiable");
 		}
-		System.out.println("Airplane " + ap.id + " left.");
+		while (runwayAssigned.availablePermits() == 0) wait();
+		System.out.println("\tAirplane " + ap.getId() + " is coasting to runway prepare to leaving.");
+		runwayAssigned.acquire();
+		TimeUnit.MILLISECONDS.sleep(1000);
+		System.out.println("\tAirplane " + ap.getId() + " left.");
+		runwayAssigned.release();
+		notify();
 	}
-	boolean getAvaiability() {
-		if (runwayAssigned.availablePermits() == 1) {				
-			return false;
-		}
-		return true;
-	}
+	
 }
