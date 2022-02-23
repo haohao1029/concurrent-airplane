@@ -39,7 +39,7 @@ public class Gateway implements Runnable{
 				rw.coasting(ap);
 				docktoGateway(ap);
 				disembarking(ap);
-				ExecutorService service = Executors.newFixedThreadPool(3);
+				ExecutorService service = Executors.newFixedThreadPool(2);
 				List<Future> allfutures = new ArrayList<>();
 				Future<Integer> fuelAdding = service.submit(new PlaneTask("fuel"));
 				Future<Integer> supplyAdding = service.submit(new PlaneTask("supply"));
