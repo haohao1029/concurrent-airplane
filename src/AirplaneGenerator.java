@@ -18,7 +18,7 @@ public class AirplaneGenerator implements Runnable{
 		while (airplaneID != 11) {
 			int pfuelShortage = ThreadLocalRandom.current().nextInt(1, 10 + 1);
 			boolean shortage = false;
-			if (pfuelShortage == 10) {
+			if (pfuelShortage > 8) {
 				shortage = true;
 			}
 			
@@ -31,17 +31,13 @@ public class AirplaneGenerator implements Runnable{
 					ct);
 			Thread thap = new Thread(airplane);
 			thap.start();
-
 			airplaneID++;
-			
 			try {
 				int duration = ThreadLocalRandom.current().nextInt(0, 3 + 1);
 				TimeUnit.SECONDS.sleep((long)(duration));
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
 
