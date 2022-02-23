@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,50 +34,34 @@ public class Gateway implements Runnable{
         {
             iex.printStackTrace();
         }
-		while (ct.reachedPlane) {
+		while (ct.reachedPlane != 10) {
+
 			try {
 				Airplane ap = ct.askPlaneToLane(this);
+				long startTime = System.currentTimeMillis();
 				rw.coasting(ap);
 				docktoGateway(ap);
 				disembarking(ap);
-				ExecutorService service = Executors.newFixedThreadPool(2);
-				List<Future> allfutures = new ArrayList<>();
-				Future<Integer> fuelAdding = service.submit(new PlaneTask("fuel"));
-				Future<Integer> supplyAdding = service.submit(new PlaneTask("supply"));
-				try {
-					Integer fuelAdded = fuelAdding.get();
-					Integer supplyAdded = fuelAdding.get();
-					if (fuelAdded == 1) {
-						ap.setFuel(true);
-					} else {
-						ap.setFuel(false);
-					}
-					if (supplyAdded == 1) {
-						ap.setSupply(true);
-					} else {
-						ap.setSupply(false);
-					}
-					System.out.println("\t\t\t\tThe fuel of Airplane " + ap.getId() + " is fulfilled.");
-					System.out.println("\t\t\t\tThe supply of Airplane " + ap.getId() + " is fulfilled.");
-					
-				} catch (ExecutionException e) {
-					System.out.println("Result from the task is not");
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					System.out.println("Result from the task is not" );
-					e.printStackTrace();
-				}
+				ExecutorService service = Executors.newFixedThreadPool(3);
+				Future<Integer> fuelAdding = service.submit(new PlaneTask("fuel",ap));
+				Future<Integer> supplyAdding = service.submit(new PlaneTask("supply",ap));
+				while (fuelAdding.isDone() == false || supplyAdding.isDone() == false) {}
+				service.shutdown();
 				embarking(ap);
 				undocktoGateway(ap);
 				rw.leaving(ap);
+				long endTime = System.currentTimeMillis();
+		        long timeElapsed = endTime - startTime;
+				System.out.println("Airplane "+ ap.getId() +" time in milliseconds: " + timeElapsed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+
 		}
 	}		
 	synchronized void disembarking(Airplane ap) {
 		int duration = ThreadLocalRandom.current().nextInt(5, 10 + 1);
-		System.out.println("\t\t\tCustomers Airplane " + ap.getId() + "  Disembarking");
+		System.out.println("\t\t\tUser Airplane " + ap.getId() + "  Disembarking." + ap.airPlaneStatus());
 		duration = duration * 100;
 		try {
 			TimeUnit.MILLISECONDS.sleep(duration);
@@ -85,11 +70,11 @@ public class Gateway implements Runnable{
 			e.printStackTrace();
 		}
 		ap.setPeople(false);
-		System.out.println("\t\t\tCustomersAirplane" + ap.getId() + " Disembarking Done");
+		System.out.println("\t\t\tUser Airplane" + ap.getId() + " Disembarking Done in " + duration + " milliseconds." + ap.airPlaneStatus());
 	}
 	synchronized void embarking(Airplane ap) {
 		int duration = ThreadLocalRandom.current().nextInt(5, 10 + 1);
-		System.out.println("\t\t\tCustomers Airplane " + ap.getId() + "  embarking");
+		System.out.println("\t\t\tUser Airplane " + ap.getId() + "  embarking" + ap.airPlaneStatus());
 		duration = duration * 100;
 		try {
 			TimeUnit.MILLISECONDS.sleep(duration);
@@ -98,15 +83,16 @@ public class Gateway implements Runnable{
 			e.printStackTrace();
 		}
 		ap.setPeople(true);
-		System.out.println("\t\t\tCustomers Airplane " + ap.getId() + " embarking Done.");
+		System.out.println("\t\t\tUser Airplane " + ap.getId() + " embarking done in "+ duration +" milliseconds." + ap.airPlaneStatus());
 
 	}
 
 	synchronized void docktoGateway(Airplane ap) {
 		try {
-			TimeUnit.MILLISECONDS.sleep(500);
+			int duration = 500;
+			TimeUnit.MILLISECONDS.sleep(duration);
 			assigned.acquire();
-			System.out.println("\t\tAirplane "+ ap.getId() + " docked to gateway " + id + ".");
+			System.out.println("\t\tAirplane "+ ap.getId() + " docked to gateway " + id + " in " + duration + " milliseconds.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -114,9 +100,10 @@ public class Gateway implements Runnable{
 
 	synchronized void undocktoGateway(Airplane ap) {
 		try {
-			TimeUnit.MILLISECONDS.sleep(500);
+			int duration = 500;
+			TimeUnit.MILLISECONDS.sleep(duration);
 			assigned.release();
-			System.out.println("\t\tAirplane "+ ap.getId() + " undocked from gateway " + id + ".");
+			System.out.println("\t\tAirplane "+ ap.getId() + " undocked from gateway " + id + " in " + duration + " milliseconds.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

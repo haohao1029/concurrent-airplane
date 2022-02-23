@@ -63,5 +63,7 @@ class Airplane implements Runnable{
     {
 		ct.add(this);
     }
-
+	public String airPlaneStatus() {
+		return  " Airplane = " + id + " | Shortage = " + shortage + " | People = " + people + " | Fuel = " + fuel +  " | Supplies = " + supplies;
+	}
 }

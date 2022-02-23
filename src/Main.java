@@ -16,7 +16,5 @@ public class Main {
 		thag.start();
 		thgw1.start();
 		thgw2.start();
-
-	}
-
+		}
 }
