@@ -5,7 +5,7 @@ public class Main {
 		Runway rw = new Runway();
 		LinkedBlockingDeque<Airplane> listAirplane = new LinkedBlockingDeque<Airplane>();
 		ControlTower ct = new ControlTower(listAirplane, rw);
-
+		
 		AirplaneGenerator ag = new AirplaneGenerator(ct, listAirplane);
 		Gateway gw1 = new Gateway(ct, rw, 1, listAirplane);
 		Gateway gw2 = new Gateway(ct, rw, 2, listAirplane);

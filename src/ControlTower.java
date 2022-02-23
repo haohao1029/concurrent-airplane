@@ -3,7 +3,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 class ControlTower {
 	Runway rw;
 	LinkedBlockingDeque<Airplane> listAirplane;
-
+	int reachedPlane = 1;
 	public ControlTower(LinkedBlockingDeque<Airplane> listAirplane, Runway rw) {
 		this.listAirplane = listAirplane;
 		this.rw = rw;
@@ -11,11 +11,15 @@ class ControlTower {
 	 
 	public Airplane askPlaneToLane(Gateway gt) throws InterruptedException {
 		Airplane ap = null;
+		reachedPlane++;
 		synchronized(listAirplane) {
 			while(listAirplane.size() == 0 ) {
 				listAirplane.wait();
 			}
 			ap = listAirplane.take();
+			System.out.println("reachedPlane");
+			System.out.println(reachedPlane);
+
 			System.out.println("\tAirplane " + ap.getId() + " is assigned to gateway "+ gt.id+".");			
 		}
 		return ap;
