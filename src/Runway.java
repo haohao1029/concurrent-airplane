@@ -27,7 +27,6 @@ public class Runway {
 		System.out.println("\tAirplane " + ap.getId() + " is coasting to runway prepare to leaving.");
 		runwayAssigned.acquire();
 		TimeUnit.MILLISECONDS.sleep(1000);
-		System.out.println("\tAirplane " + ap.getId() + " left.");
 		runwayAssigned.release();
 		notify();
 	}

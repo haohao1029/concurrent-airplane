@@ -15,13 +15,13 @@ public class PlaneTask implements Callable{
 			int duration = ThreadLocalRandom.current().nextInt(5, 10 + 1);
 			duration = duration * 100;
 			Thread.sleep(duration);
-			System.out.println("The fuel of Airplane " + ap.getId() + " is refilled in " + duration + "." + ap.airPlaneStatus());
+			System.out.println("\t\t\t\tThe fuel of Airplane " + ap.getId() + " is refilled in " + duration + "." + ap.airPlaneStatus());
 			return duration;
 		} else if (task == "supply") {
 			int duration = ThreadLocalRandom.current().nextInt(5, 10 + 1);
 			duration = duration * 100;
 			Thread.sleep(duration);
-			System.out.println("The supply of Airplane " + ap.getId() + " is refilled in " + duration + "." + ap.airPlaneStatus());
+			System.out.println("\t\t\t\tThe supply of Airplane " + ap.getId() + " is refilled in " + duration + "." + ap.airPlaneStatus());
 			return duration;
 		}
 		return 0;

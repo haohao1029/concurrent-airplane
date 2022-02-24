@@ -9,6 +9,7 @@ class Airplane implements Runnable{
 	private boolean shortage;
 	private long startWaitingTIme;
 	private long endWaitingTime;
+	
 	public Airplane(int id, boolean fuel, int people, boolean shortage, boolean supplies, ControlTower ct) {
 		this.id = id;
 		this.fuel = fuel;

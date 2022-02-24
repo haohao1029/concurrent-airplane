@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -42,7 +38,7 @@ public class Gateway implements Runnable{
 				rw.coasting(ap);
 				docktoGateway(ap);
 				disembarking(ap);
-				ExecutorService service = Executors.newFixedThreadPool(3);
+				ExecutorService service = Executors.newFixedThreadPool(2);
 				Future<Integer> fuelAdding = service.submit(new PlaneTask("fuel",ap));
 				Future<Integer> supplyAdding = service.submit(new PlaneTask("supply",ap));
 				while (fuelAdding.isDone() == false || supplyAdding.isDone() == false) {}
@@ -50,6 +46,8 @@ public class Gateway implements Runnable{
 				embarking(ap);
 				undocktoGateway(ap);
 				rw.leaving(ap);
+				System.out.println("\tAirplane " + ap.getId() + " left from Gateway " + id + ".");
+
 				long endTime = System.currentTimeMillis();
 		        long timeElapsed = endTime - startTime;
 				System.out.println("Airplane "+ ap.getId() +" time in milliseconds: " + timeElapsed);
