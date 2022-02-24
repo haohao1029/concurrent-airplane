@@ -10,15 +10,12 @@ class ControlTower {
 	 
 	public Airplane askPlaneToLane(Gateway gt) throws InterruptedException {
 		Airplane ap = null;
-		reachedPlane++;
 		synchronized(listAirplane) {
 			while(listAirplane.size() == 0 ) {
 				listAirplane.wait();
 			}
 			GlobalVal.COUNT_PLANE++;
 			ap = listAirplane.take();
-			System.out.println("reachedPlane");
-			System.out.println(reachedPlane);
 
 			System.out.println("\tAirplane " + ap.getId() + " is assigned to gateway "+ gt.id+".");			
 		}
