@@ -21,11 +21,11 @@ public class AirplaneGenerator implements Runnable{
 			if (pfuelShortage > 8) {
 				shortage = true;
 			}
-			
+			int people = ThreadLocalRandom.current().nextInt(5, 10 + 1) * 10;
 			Airplane airplane = new Airplane(
 					airplaneID, 
 					false, 
-					true, 
+					people, 
 					shortage, 
 					false, 
 					ct);

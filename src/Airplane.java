@@ -3,12 +3,13 @@ import java.awt.*;
 class Airplane implements Runnable{
 	private int id;
 	private  boolean fuel;
-	private boolean people;
+	private int people;
 	private boolean supplies;
 	private ControlTower ct;
 	private boolean shortage;
-	
-	public Airplane(int id, boolean fuel, boolean people, boolean shortage, boolean supplies, ControlTower ct) {
+	private long startWaitingTIme;
+	private long endWaitingTime;
+	public Airplane(int id, boolean fuel, int people, boolean shortage, boolean supplies, ControlTower ct) {
 		this.id = id;
 		this.fuel = fuel;
 		this.people = people;
@@ -23,7 +24,7 @@ class Airplane implements Runnable{
 	public boolean getShortage() {
 		return shortage;
 	}
-	public boolean getPeople() {
+	public int getPeople() {
 		return people;
 	}
 	public boolean getSupply() {
@@ -40,7 +41,7 @@ class Airplane implements Runnable{
 		this.shortage = shortage;
         return shortage;
 	}
-	public boolean setPeople(boolean people) {
+	public int setPeople(int people) {
 		this.people = people;
         return people;
 	}
@@ -51,6 +52,18 @@ class Airplane implements Runnable{
 	public boolean setFuel(boolean fuel) {
 		this.fuel = fuel;
         return fuel;
+	}
+	
+	public void setStart() {
+		this.startWaitingTIme = System.currentTimeMillis();
+	}
+	
+	public void setEnd() {
+		this.endWaitingTime = System.currentTimeMillis();
+	}
+	
+	public long WaitTime() {
+		return this.endWaitingTime - this.startWaitingTIme;
 	}
 	@Override
 	public void run() {

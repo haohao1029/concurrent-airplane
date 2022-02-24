@@ -16,5 +16,14 @@ public class Main {
 		thag.start();
 		thgw1.start();
 		thgw2.start();
-		}
+		
+		while(thgw1.isAlive() == true || thgw2.isAlive() == true) {}
+		
+		System.out.println("Plane Served = " + GlobalVal.COUNT_PLANE);
+		System.out.println("People Served = " + GlobalVal.COUNT_PEOPLE);
+		System.out.println("Plane TOtal Time Wait = " + GlobalVal.TOTAL_TIME_WAIT + " milliseconds.");
+		System.out.println("Plane MAX Time Wait = " + GlobalVal.MAX_WAIT + " milliseconds.");
+		System.out.println("Plane AVG Time Wait = " + GlobalVal.TOTAL_TIME_WAIT / GlobalVal.COUNT_PLANE + " milliseconds.");
+		System.out.println("Plane MIN Time Wait = " + GlobalVal.MIN_WAIT + " milliseconds.");
+	}
 }

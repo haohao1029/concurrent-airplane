@@ -3,7 +3,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 class ControlTower {
 	Runway rw;
 	LinkedBlockingDeque<Airplane> listAirplane;
-	int reachedPlane = 0 ;
 	public ControlTower(LinkedBlockingDeque<Airplane> listAirplane, Runway rw) {
 		this.listAirplane = listAirplane;
 		this.rw = rw;
@@ -15,10 +14,19 @@ class ControlTower {
 			while(listAirplane.size() == 0 ) {
 				listAirplane.wait();
 			}
-			reachedPlane++;
+			GlobalVal.COUNT_PLANE++;
 			ap = listAirplane.take();
 			System.out.println("\tAirplane " + ap.getId() + " is assigned to gateway "+ gt.id+".");			
 		}
+		ap.setEnd();
+		GlobalVal.TOTAL_TIME_WAIT += ap.WaitTime();
+		if (ap.WaitTime() > GlobalVal.MAX_WAIT) {
+			GlobalVal.MAX_WAIT = ap.WaitTime();
+		}
+		if (ap.WaitTime() < GlobalVal.MIN_WAIT) {
+			GlobalVal.MIN_WAIT = ap.WaitTime();
+		}
+		GlobalVal.COUNT_PEOPLE += ap.getPeople();
 		return ap;
 	}
 	
@@ -30,6 +38,7 @@ class ControlTower {
 			System.out.println("Airplane "+ String.valueOf(ap.getId())+ " with " + ap + " is entering the queue." + ap.airPlaneStatus());
 			listAirplane.offer(ap);			
 		}		
+		ap.setStart();
 		synchronized (listAirplane) {
 			int queueSize = listAirplane.size();
 			System.out.println("Airplane queue have " + queueSize + " on waiting.");

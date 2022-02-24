@@ -34,7 +34,7 @@ public class Gateway implements Runnable{
         {
             iex.printStackTrace();
         }
-		while (ct.reachedPlane != 10) {
+		while (GlobalVal.COUNT_PLANE != 10) {
 
 			try {
 				Airplane ap = ct.askPlaneToLane(this);
@@ -60,16 +60,16 @@ public class Gateway implements Runnable{
 		}
 	}		
 	synchronized void disembarking(Airplane ap) {
-		int duration = ThreadLocalRandom.current().nextInt(5, 10 + 1);
 		System.out.println("\t\t\tUser Airplane " + ap.getId() + "  Disembarking." + ap.airPlaneStatus());
-		duration = duration * 100;
+		int duration = ap.getPeople() * 10;
 		try {
 			TimeUnit.MILLISECONDS.sleep(duration);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ap.setPeople(false);
+		GlobalVal.COUNT_PEOPLE += ap.getPeople();
+		ap.setPeople(0);
 		System.out.println("\t\t\tUser Airplane" + ap.getId() + " Disembarking Done in " + duration + " milliseconds." + ap.airPlaneStatus());
 	}
 	synchronized void embarking(Airplane ap) {
@@ -82,7 +82,7 @@ public class Gateway implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ap.setPeople(true);
+		ap.setPeople(duration * 10);
 		System.out.println("\t\t\tUser Airplane " + ap.getId() + " embarking done in "+ duration +" milliseconds." + ap.airPlaneStatus());
 
 	}
